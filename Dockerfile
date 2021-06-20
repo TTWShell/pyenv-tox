@@ -45,10 +45,9 @@ RUN for version in 3.6.5 3.7.10 3.8.10 3.9.5; do pyenv install $version; done \
  && rm -rf /tmp/*
 
 ENV PATH $PYENV_ROOT/shims:$PATH
-RUN pyenv local 3.9.5 && \
+RUN pyenv global 3.9.5 && \
     python -m pip install -U pip && \
     python -m pip install tox && \
-    pyenv local --unset && \
     pyenv rehash
 
 WORKDIR /app
