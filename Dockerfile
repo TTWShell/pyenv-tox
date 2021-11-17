@@ -39,6 +39,18 @@ RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && \
     echo 'eval "$(pyenv init -)"' >> ~/.bashrc && \
     echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
 
+RUN wget https://www.openssl.org/source/openssl-1.1.1g.tar.gz && \
+    tar zxvf openssl-1.1.1g.tar.gz && \
+    cd openssl-1.1.1g && \
+    ./config --prefix=$HOME/openssl --openssldir=$HOME/openssl no-ssl2 && \
+    make && make test && make install && cd - && \
+    rm openssl-1.1.1g.tar.gz && rm -rf openssl-1.1.1g
+
+ENV PATH $HOME/openssl/bin:$PATH
+ENV LD_LIBRARY_PATH $HOME/openssl/lib
+ENV CPPFLAGS -I$HOME/openssl/include
+ENV LDFLAGS -L$HOME/openssl/lib
+ENV SSH $HOME/openssl
 RUN for version in 3.6.5 3.7.10 3.8.10 3.9.5 3.10.0; do pyenv install $version; done \
     && find $PYENV_ROOT/versions -type d '(' -name '__pycache__' -o -name 'test' -o -name 'tests' ')' -exec rm -rf '{}' + \
     && find $PYENV_ROOT/versions -type f '(' -name '*.pyo' -o -name '*.exe' ')' -exec rm -f '{}' + \
