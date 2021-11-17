@@ -39,13 +39,13 @@ RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && \
     echo 'eval "$(pyenv init -)"' >> ~/.bashrc && \
     echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
 
-RUN for version in 3.6.5 3.7.10 3.8.10 3.9.5; do pyenv install $version; done \
+RUN for version in 3.6.5 3.7.10 3.8.10 3.9.5 3.10.0; do pyenv install $version; done \
     && find $PYENV_ROOT/versions -type d '(' -name '__pycache__' -o -name 'test' -o -name 'tests' ')' -exec rm -rf '{}' + \
     && find $PYENV_ROOT/versions -type f '(' -name '*.pyo' -o -name '*.exe' ')' -exec rm -f '{}' + \
  && rm -rf /tmp/*
 
 ENV PATH $PYENV_ROOT/shims:$PATH
-RUN pyenv global 3.9.5 && \
+RUN pyenv global 3.10.0 && \
     python -m pip install -U pip && \
     python -m pip install tox && \
     pyenv rehash
@@ -56,8 +56,9 @@ VOLUME /src
 RUN pyenv virtualenv -p python3.6 3.6.5 py36 && \
     pyenv virtualenv -p python3.7 3.7.10 py37 && \
     pyenv virtualenv -p python3.8 3.8.10 py38 && \
-    pyenv virtualenv -p python3.9 3.9.5 py39
+    pyenv virtualenv -p python3.9 3.9.5 py39 && \
+    pyenv virtualenv -p python3.10 3.10.0 py310
 
-RUN eval "$(pyenv init --path)" && eval "$(pyenv init -)" && pyenv shell py36 py37 py38 py39
+RUN eval "$(pyenv init --path)" && eval "$(pyenv init -)" && pyenv shell py36 py37 py38 py39 py310
 
 CMD ["tox"]
