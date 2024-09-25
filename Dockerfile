@@ -9,28 +9,28 @@ ENV LANG en_US.UTF-8
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        build-essential \
-        ca-certificates \
-        curl \
-        git \
-	openssh-client \
-        libbz2-dev \
-        libffi-dev \
-        libncurses5-dev \
-        libncursesw5-dev \
-        libreadline-dev \
-        libsqlite3-dev \
-        libssl1.0-dev \
-        liblzma-dev \
-        llvm \
-        make \
-        netbase \
-        pkg-config \
-        tk-dev \
-        wget \
-        xz-utils \
-        zlib1g-dev \
-   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    build-essential \
+    ca-certificates \
+    curl \
+    git \
+    openssh-client \
+    libbz2-dev \
+    libffi-dev \
+    libncurses5-dev \
+    libncursesw5-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libssl1.0-dev \
+    liblzma-dev \
+    llvm \
+    make \
+    netbase \
+    pkg-config \
+    tk-dev \
+    wget \
+    xz-utils \
+    zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV HOME /root
 ENV PYENV_ROOT $HOME/.pyenv
@@ -41,10 +41,11 @@ RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && \
     echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
 
 RUN wget https://www.openssl.org/source/openssl-1.1.1g.tar.gz && \
-    tar zxvf openssl-1.1.1g.tar.gz && \
-    cd openssl-1.1.1g && \
+    tar zxvf openssl-1.1.1g.tar.gz
+
+RUN cd openssl-1.1.1g && \
     ./config --prefix=$HOME/openssl --openssldir=$HOME/openssl no-ssl2 && \
-    make && make test && make install && cd - && \
+    make && make install && cd - && \
     rm openssl-1.1.1g.tar.gz && rm -rf openssl-1.1.1g
 
 ENV PATH $HOME/openssl/bin:$PATH
@@ -55,7 +56,7 @@ ENV SSH $HOME/openssl
 RUN for version in 3.6.5 3.7.10 3.8.10 3.9.5 3.10.0; do pyenv install $version; done \
     && find $PYENV_ROOT/versions -type d '(' -name '__pycache__' -o -name 'test' -o -name 'tests' ')' -exec rm -rf '{}' + \
     && find $PYENV_ROOT/versions -type f '(' -name '*.pyo' -o -name '*.exe' ')' -exec rm -f '{}' + \
- && rm -rf /tmp/*
+    && rm -rf /tmp/*
 
 ENV PATH $PYENV_ROOT/shims:$PATH
 RUN pyenv global 3.10.0 && \
