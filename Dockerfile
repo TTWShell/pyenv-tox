@@ -53,7 +53,7 @@ ENV LD_LIBRARY_PATH $HOME/openssl/lib
 ENV CPPFLAGS -I$HOME/openssl/include
 ENV LDFLAGS -L$HOME/openssl/lib
 ENV SSH $HOME/openssl
-RUN for version in 3.6.5 3.7.10 3.8.10 3.9.5 3.10.0; do pyenv install $version; done \
+RUN for version in 3.8.10 3.9.5 3.10.0 3.11.0 3.12.0; do pyenv install $version; done \
     && find $PYENV_ROOT/versions -type d '(' -name '__pycache__' -o -name 'test' -o -name 'tests' ')' -exec rm -rf '{}' + \
     && find $PYENV_ROOT/versions -type f '(' -name '*.pyo' -o -name '*.exe' ')' -exec rm -f '{}' + \
     && rm -rf /tmp/*
@@ -67,12 +67,12 @@ RUN pyenv global 3.10.0 && \
 WORKDIR /app
 VOLUME /src
 
-RUN pyenv virtualenv -p python3.6 3.6.5 py36 && \
-    pyenv virtualenv -p python3.7 3.7.10 py37 && \
-    pyenv virtualenv -p python3.8 3.8.10 py38 && \
+RUN pyenv virtualenv -p python3.8 3.8.10 py38 && \
     pyenv virtualenv -p python3.9 3.9.5 py39 && \
-    pyenv virtualenv -p python3.10 3.10.0 py310
+    pyenv virtualenv -p python3.10 3.10.0 py310 && \
+    pyenv virtualenv -p python3.11 3.11.0 py311 && \
+    pyenv virtualenv -p python3.12 3.12.0 py312
 
-RUN eval "$(pyenv init --path)" && eval "$(pyenv init -)" && pyenv shell py36 py37 py38 py39 py310
+RUN eval "$(pyenv init --path)" && eval "$(pyenv init -)" && pyenv shell py38 py39 py310 py311 py312
 
 CMD ["tox"]
